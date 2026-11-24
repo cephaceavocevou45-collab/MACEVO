@@ -1,0 +1,126 @@
+\documentclass[12pt]{report}
+
+% ============================================================
+% MACEVO — Préambule scientifique
+% ============================================================
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{french}
+
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{caption}
+\usepackage{enumitem}
+
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+
+\usepackage{csquotes}
+
+\usepackage[
+    backend=biber,
+    style=apa,
+    sorting=nyt
+]{biblatex}
+
+\addbibresource{references.bib}
+
+\usepackage{bookmark}
+
+% ============================================================
+% Configuration
+% ============================================================
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue,
+    pdftitle={Étude scientifique MACEVO},
+    pdfauthor={Houssouf}
+}
+
+\setstretch{1.5}
+
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0.4em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+% ============================================================
+% Commandes MACEVO
+% ============================================================
+
+\newcommand{\MACEVOTitle}{Étude scientifique MACEVO}
+\newcommand{\MACEVOAuthor}{Houssouf}
+\newcommand{\MACEVOInstitution}{MACEVO}
+
+\begin{document}
+
+
+% ============================================================
+% Début du document MACEVO
+% ============================================================
+
+\begin{titlepage}
+\centering
+
+\vspace*{2cm}
+{\Large\bfseries MACEVO\par}
+\vspace{0.5cm}
+{\large Département scientifique\par}
+\vspace{2cm}
+{\Huge\bfseries Étude scientifique MACEVO\par}
+\vspace{1cm}
+{\large\textbf{Auteur :} Houssouf\par}
+\vspace{0.5cm}
+{\large\textbf{Encadreur :} Direction scientifique\par}
+\vspace{1cm}
+{\large 2026\par}
+\vfill
+{\large Document scientifique généré avec MACEVO\par}
+\end{titlepage}
+\cleardoublepage
+\begin{abstract}
+Ce document présente une étude scientifique générée et structurée avec MACEVO.
+\end{abstract}
+
+\noindent\textbf{Mots-clés :} intelligence artificielle, recherche scientifique, MACEVO
+
+\cleardoublepage
+\tableofcontents
+\cleardoublepage
+\chapter{Introduction}
+
+L'intelligence artificielle transforme progressivement les méthodes de recherche scientifique.
+
+\begin{equation}
+E = mc^2
+\label{eq:energie}
+\end{equation}
+
+% ============================================================
+% Fin du document MACEVO
+% ============================================================
+
+\end{document}

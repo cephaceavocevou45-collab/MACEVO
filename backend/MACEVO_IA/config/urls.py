@@ -1,0 +1,19 @@
+﻿from django.contrib import admin
+from django.urls import include, path
+
+
+urlpatterns = [
+    path(
+        "admin/",
+        admin.site.urls,
+    ),
+
+    path(
+        "api/ai/",
+        include(
+            "apps.assistant.api.urls"
+        ),
+    ),
+]
+
+

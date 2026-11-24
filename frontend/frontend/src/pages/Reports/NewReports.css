@@ -1,0 +1,2266 @@
+/* ============================================================
+   MACEVO — NOUVEAU RAPPORT
+   Layout professionnel
+   ------------------------------------------------------------
+   Architecture :
+
+   Sidebar | Navbar + contenu
+                    ├── contenu principal
+                    └── résumé à droite
+============================================================ */
+
+
+/* ============================================================
+   1. VARIABLES
+============================================================ */
+
+:root {
+  --macevo-blue: #2563eb;
+  --macevo-blue-dark: #1d4ed8;
+  --macevo-blue-light: #eff6ff;
+
+  --macevo-text: #0f172a;
+  --macevo-text-soft: #475569;
+  --macevo-text-muted: #64748b;
+
+  --macevo-border: #e2e8f0;
+  --macevo-border-light: #edf2f7;
+
+  --macevo-bg: #f2f4f7;
+  --macevo-white: #ffffff;
+
+  --macevo-success: #16a34a;
+  --macevo-danger: #dc2626;
+
+  --macevo-sidebar-width: 274px;
+
+  --macevo-radius-sm: 10px;
+  --macevo-radius-md: 14px;
+  --macevo-radius-lg: 18px;
+  --macevo-radius-xl: 22px;
+
+  --macevo-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 8px 24px rgba(15, 23, 42, 0.04);
+}
+
+
+/* ============================================================
+   2. STRUCTURE GLOBALE
+============================================================ */
+
+.macevo-page {
+  width: 100%;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: row;
+
+  overflow: hidden;
+
+  background: var(--macevo-bg);
+  color: var(--macevo-text);
+
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+
+/*
+   Le Sidebar est le premier enfant.
+
+   La zone principale occupe uniquement
+   l'espace disponible à droite.
+*/
+
+.macevo-page > .macevo-page__main {
+  flex: 1 1 auto;
+
+  min-width: 0;
+  width: auto;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+}
+
+
+/* ============================================================
+   3. ZONE PRINCIPALE
+============================================================ */
+
+.macevo-new-report {
+  flex: 1 1 auto;
+
+  min-width: 0;
+  width: 100%;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding: 32px 34px 48px;
+
+  background: var(--macevo-bg);
+
+  box-sizing: border-box;
+}
+
+
+/* Scrollbar */
+
+.macevo-new-report::-webkit-scrollbar {
+  width: 8px;
+}
+
+.macevo-new-report::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.macevo-new-report::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+
+.macevo-new-report::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+
+/* ============================================================
+   4. EN-TÊTE
+============================================================ */
+
+.macevo-new-report__header {
+  width: 100%;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 24px;
+
+  margin-bottom: 28px;
+}
+
+.macevo-new-report__header > div:first-child {
+  min-width: 0;
+}
+
+.macevo-breadcrumb {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  margin-bottom: 10px;
+
+  font-size: 12px;
+  line-height: 1.4;
+
+  color: var(--macevo-text-muted);
+}
+
+.macevo-breadcrumb strong {
+  color: var(--macevo-text);
+  font-weight: 600;
+}
+
+.macevo-new-report__header h1 {
+  margin: 0;
+
+  color: var(--macevo-text);
+
+  font-size: 28px;
+  line-height: 1.2;
+  font-weight: 800;
+
+  letter-spacing: -0.025em;
+}
+
+.macevo-new-report__header p {
+  max-width: 760px;
+
+  margin: 9px 0 0;
+
+  color: var(--macevo-text-muted);
+
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.macevo-header-badge {
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  min-height: 38px;
+
+  padding: 0 14px;
+
+  border: 1px solid #dbeafe;
+  border-radius: 11px;
+
+  background: #eff6ff;
+  color: var(--macevo-blue);
+
+  font-size: 12px;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+
+/* ============================================================
+   5. STEPPER
+============================================================ */
+
+.macevo-stepper {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  margin-bottom: 26px;
+  padding: 18px 20px;
+
+  border: 1px solid var(--macevo-border);
+  border-radius: var(--macevo-radius-lg);
+
+  background: var(--macevo-white);
+
+  box-shadow: var(--macevo-shadow);
+
+  box-sizing: border-box;
+}
+
+.macevo-step {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  flex: 0 1 auto;
+}
+
+.macevo-step__number {
+  width: 32px;
+  height: 32px;
+
+  flex: 0 0 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 50%;
+
+  background: #ffffff;
+  color: #64748b;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.macevo-step__content {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.macevo-step__label {
+  color: #334155;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+.macevo-step__description {
+  color: #94a3b8;
+
+  font-size: 10px;
+
+  white-space: nowrap;
+}
+
+.macevo-step.is-active .macevo-step__number {
+  border-color: var(--macevo-blue);
+
+  background: var(--macevo-blue);
+  color: #ffffff;
+}
+
+.macevo-step.is-active .macevo-step__label {
+  color: var(--macevo-blue);
+}
+
+.macevo-step.is-completed .macevo-step__number {
+  border-color: var(--macevo-success);
+
+  background: #dcfce7;
+  color: var(--macevo-success);
+}
+
+.macevo-step.is-completed .macevo-step__label {
+  color: #166534;
+}
+
+.macevo-stepper__line {
+  flex: 1 1 40px;
+
+  height: 1px;
+
+  min-width: 18px;
+
+  margin: 0 12px;
+
+  background: #e2e8f0;
+}
+
+.macevo-stepper__line.is-completed {
+  background: #86efac;
+}
+
+
+/* ============================================================
+   6. LAYOUT FORMULAIRE + RÉSUMÉ
+============================================================ */
+
+.macevo-new-report__layout {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    340px;
+
+  align-items: start;
+
+  gap: 24px;
+
+  box-sizing: border-box;
+}
+
+.macevo-new-report__content {
+  min-width: 0;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
+}
+
+
+/* ============================================================
+   7. PANNEAU PRINCIPAL
+============================================================ */
+
+.macevo-panel {
+  width: 100%;
+
+  border: 1px solid var(--macevo-border);
+  border-radius: var(--macevo-radius-xl);
+
+  background: var(--macevo-white);
+
+  box-shadow: var(--macevo-shadow);
+
+  overflow: hidden;
+
+  box-sizing: border-box;
+}
+
+.macevo-panel__intro {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 14px;
+
+  padding: 24px 26px;
+
+  border-bottom: 1px solid var(--macevo-border-light);
+}
+
+.macevo-panel__icon {
+  width: 42px;
+  height: 42px;
+
+  flex: 0 0 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: #eff6ff;
+  color: var(--macevo-blue);
+}
+
+.macevo-panel__intro h1 {
+  margin: 0;
+
+  color: var(--macevo-text);
+
+  font-size: 18px;
+  line-height: 1.3;
+  font-weight: 750;
+
+  letter-spacing: -0.015em;
+}
+
+.macevo-panel__intro p {
+  max-width: 720px;
+
+  margin: 6px 0 0;
+
+  color: var(--macevo-text-muted);
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+
+/* ============================================================
+   8. FORMULAIRE
+============================================================ */
+
+.macevo-form-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 20px;
+
+  padding: 26px;
+}
+
+.macevo-form-grid__full {
+  grid-column: 1 / -1;
+}
+
+.macevo-field {
+  min-width: 0;
+}
+
+.macevo-field__label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  margin-bottom: 8px;
+}
+
+.macevo-field__label {
+  color: #334155;
+
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.macevo-required {
+  margin-left: 4px;
+  color: #dc2626;
+}
+
+.macevo-field__hint {
+  color: #94a3b8;
+
+  font-size: 10px;
+  line-height: 1.4;
+
+  text-align: right;
+}
+
+
+/* ============================================================
+   9. INPUTS
+============================================================ */
+
+.macevo-input {
+  width: 100%;
+  min-width: 0;
+
+  min-height: 46px;
+
+  padding: 0 13px;
+
+  border: 1px solid #dbe2ea;
+  border-radius: 11px;
+
+  background: #ffffff;
+  color: #1e293b;
+
+  font-family: inherit;
+  font-size: 12px;
+
+  outline: none;
+
+  box-sizing: border-box;
+
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
+}
+
+.macevo-input:hover {
+  border-color: #cbd5e1;
+}
+
+.macevo-input:focus {
+  border-color: #60a5fa;
+
+  box-shadow:
+    0 0 0 3px rgba(37, 99, 235, 0.09);
+}
+
+.macevo-input::placeholder {
+  color: #a3afbf;
+}
+
+.macevo-input:disabled {
+  cursor: not-allowed;
+
+  background: #f8fafc;
+
+  opacity: 0.7;
+}
+
+
+/* ============================================================
+   10. SELECT
+============================================================ */
+
+.macevo-select-wrapper {
+  position: relative;
+
+  width: 100%;
+}
+
+.macevo-select-wrapper .macevo-select {
+  appearance: none;
+
+  padding-right: 42px;
+
+  cursor: pointer;
+}
+
+.macevo-select-wrapper > svg {
+  position: absolute;
+
+  right: 13px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  pointer-events: none;
+
+  color: #64748b;
+}
+
+
+/* ============================================================
+   11. TEXTAREA
+============================================================ */
+
+.macevo-textarea {
+  min-height: 110px;
+
+  padding: 12px 13px;
+
+  resize: vertical;
+
+  line-height: 1.6;
+}
+
+
+/* ============================================================
+   12. INFO BOX
+============================================================ */
+
+.macevo-info-box {
+  margin: 0 26px 26px;
+
+  display: flex;
+  align-items: flex-start;
+
+  gap: 12px;
+
+  padding: 14px 16px;
+
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+
+  background: #eff6ff;
+
+  color: #1d4ed8;
+}
+
+.macevo-info-box svg {
+  flex: 0 0 auto;
+
+  margin-top: 1px;
+}
+
+.macevo-info-box strong {
+  display: block;
+
+  color: #1e40af;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.macevo-info-box p {
+  margin: 4px 0 0;
+
+  color: #475569;
+
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.macevo-info-box--neutral {
+  border-color: #e2e8f0;
+
+  background: #f8fafc;
+
+  color: #64748b;
+}
+
+.macevo-info-box--neutral strong {
+  color: #334155;
+}
+
+
+/* ============================================================
+   13. SOUS-SECTIONS
+============================================================ */
+
+.macevo-section-heading {
+  padding: 24px 26px 0;
+}
+
+.macevo-section-heading--spaced {
+  padding-top: 4px;
+}
+
+.macevo-section-heading h2 {
+  margin: 0;
+
+  color: #0f172a;
+
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.macevo-section-heading p {
+  margin: 5px 0 0;
+
+  color: #64748b;
+
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+
+/* ============================================================
+   14. ERREUR
+============================================================ */
+
+.macevo-error {
+  width: 100%;
+
+  display: flex;
+  align-items: flex-start;
+
+  gap: 10px;
+
+  padding: 13px 15px;
+
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+
+  background: #fef2f2;
+
+  color: #b91c1c;
+
+  font-size: 12px;
+  line-height: 1.5;
+
+  box-sizing: border-box;
+}
+
+.macevo-error svg {
+  flex: 0 0 auto;
+
+  margin-top: 1px;
+}
+
+
+/* ============================================================
+   15. LOGO — ZONE D'IMPORTATION PROFESSIONNELLE
+============================================================ */
+
+/*
+   Cette zone remplace le simple bouton "+".
+
+   Elle permet :
+   - d'afficher le logo sélectionné ;
+   - de choisir un fichier ;
+   - de remplacer le logo ;
+   - de supprimer le logo ;
+   - d'afficher une zone propre lorsqu'aucun logo
+     n'est encore sélectionné.
+*/
+
+.macevo-logo-field {
+  width: 100%;
+}
+
+.macevo-logo-upload {
+  position: relative;
+
+  width: 100%;
+  min-height: 170px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px dashed #cbd5e1;
+  border-radius: 16px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #f8fafc 100%
+    );
+
+  overflow: hidden;
+
+  box-sizing: border-box;
+
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.macevo-logo-upload:hover {
+  border-color: #93c5fd;
+
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #f0f7ff 100%
+    );
+
+  box-shadow:
+    0 4px 16px rgba(37, 99, 235, 0.06);
+}
+
+.macevo-logo-upload.is-dragging {
+  border-color: var(--macevo-blue);
+
+  background: #eff6ff;
+
+  box-shadow:
+    0 0 0 3px rgba(37, 99, 235, 0.08);
+}
+
+.macevo-logo-upload__input {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  opacity: 0;
+
+  cursor: pointer;
+
+  z-index: 3;
+}
+
+.macevo-logo-upload__empty {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  text-align: center;
+
+  pointer-events: none;
+}
+
+.macevo-logo-upload__icon {
+  width: 52px;
+  height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 12px;
+
+  border: 1px solid #dbeafe;
+  border-radius: 14px;
+
+  background: #eff6ff;
+
+  color: var(--macevo-blue);
+}
+
+.macevo-logo-upload__title {
+  margin: 0;
+
+  color: #334155;
+
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.macevo-logo-upload__description {
+  max-width: 360px;
+
+  margin: 5px 0 0;
+
+  color: #94a3b8;
+
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.macevo-logo-upload__formats {
+  margin-top: 9px;
+
+  color: #a1a1aa;
+
+  font-size: 9px;
+}
+
+.macevo-logo-upload__preview {
+  position: relative;
+
+  width: 100%;
+  min-height: 170px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  box-sizing: border-box;
+}
+
+.macevo-logo-upload__preview img {
+  display: block;
+
+  max-width: 260px;
+  max-height: 110px;
+
+  width: auto;
+  height: auto;
+
+  object-fit: contain;
+}
+
+.macevo-logo-upload__actions {
+  position: absolute;
+
+  right: 12px;
+  top: 12px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  z-index: 4;
+}
+
+.macevo-logo-upload__action {
+  width: 32px;
+  height: 32px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+
+  background: rgba(255, 255, 255, 0.96);
+
+  color: #64748b;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 2px 6px rgba(15, 23, 42, 0.06);
+
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease,
+    color 0.18s ease;
+}
+
+.macevo-logo-upload__action:hover {
+  border-color: #bfdbfe;
+
+  background: #eff6ff;
+
+  color: var(--macevo-blue);
+}
+
+.macevo-logo-upload__action--danger:hover {
+  border-color: #fecaca;
+
+  background: #fef2f2;
+
+  color: var(--macevo-danger);
+}
+
+.macevo-logo-upload__filename {
+  margin-top: 10px;
+
+  max-width: 100%;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  color: #64748b;
+
+  font-size: 10px;
+  text-align: center;
+}
+
+.macevo-logo-upload__hint {
+  margin-top: 8px;
+
+  color: #94a3b8;
+
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+
+/* ============================================================
+   16. PANNEAU RÉSUMÉ
+============================================================ */
+
+.macevo-summary {
+  width: 100%;
+  min-width: 0;
+
+  position: sticky;
+  top: 24px;
+
+  border: 1px solid var(--macevo-border);
+  border-radius: var(--macevo-radius-xl);
+
+  background: var(--macevo-white);
+
+  box-shadow: var(--macevo-shadow);
+
+  overflow: hidden;
+
+  box-sizing: border-box;
+}
+
+.macevo-summary__header {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 20px;
+
+  border-bottom: 1px solid var(--macevo-border-light);
+}
+
+.macevo-summary__icon {
+  width: 38px;
+  height: 38px;
+
+  flex: 0 0 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 11px;
+
+  background: #eff6ff;
+  color: var(--macevo-blue);
+}
+
+.macevo-summary__header h3 {
+  margin: 0;
+
+  color: #0f172a;
+
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.macevo-summary__header p {
+  margin: 3px 0 0;
+
+  color: #94a3b8;
+
+  font-size: 10px;
+}
+
+.macevo-summary__body {
+  padding: 18px 20px;
+}
+
+.macevo-summary-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 14px;
+
+  padding: 10px 0;
+
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.macevo-summary-item:first-child {
+  padding-top: 0;
+}
+
+.macevo-summary-item:last-child {
+  border-bottom: 0;
+}
+
+.macevo-summary-item span {
+  flex: 0 0 auto;
+
+  color: #94a3b8;
+
+  font-size: 10px;
+}
+
+.macevo-summary-item strong {
+  min-width: 0;
+
+  color: #334155;
+
+  font-size: 10px;
+  font-weight: 650;
+
+  text-align: right;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* ============================================================
+   17. STRUCTURE DU RÉSUMÉ
+============================================================ */
+
+.macevo-summary__structure {
+  margin-top: 16px;
+
+  padding-top: 16px;
+
+  border-top: 1px solid #e2e8f0;
+}
+
+.macevo-summary__structure-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  margin-bottom: 10px;
+}
+
+.macevo-summary__structure-title span {
+  color: #334155;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.macevo-summary__structure-title strong {
+  color: var(--macevo-blue);
+
+  font-size: 10px;
+}
+
+.macevo-summary__structure ol {
+  margin: 0;
+
+  padding-left: 20px;
+}
+
+.macevo-summary__structure li {
+  margin-bottom: 6px;
+
+  color: #64748b;
+
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.macevo-summary__structure li:last-child {
+  margin-bottom: 0;
+}
+
+.macevo-summary__structure .macevo-summary__more {
+  color: var(--macevo-blue);
+
+  font-weight: 650;
+
+  list-style: none;
+
+  margin-left: -20px;
+}
+
+.macevo-summary__footer {
+  padding: 18px 20px;
+
+  border-top: 1px solid var(--macevo-border-light);
+
+  background: #fafcff;
+}
+
+
+/* ============================================================
+   18. MINI PROGRESSION
+============================================================ */
+
+.macevo-progress-mini__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 8px;
+}
+
+.macevo-progress-mini__header span {
+  color: #64748b;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.macevo-progress-mini__header strong {
+  color: var(--macevo-blue);
+
+  font-size: 10px;
+}
+
+.macevo-progress-mini__track {
+  width: 100%;
+  height: 6px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background: #e2e8f0;
+}
+
+.macevo-progress-mini__value {
+  height: 100%;
+
+  border-radius: inherit;
+
+  background: var(--macevo-blue);
+
+  transition: width 0.25s ease;
+}
+
+
+/* ============================================================
+   19. STRUCTURE PROPOSÉE
+============================================================ */
+
+.macevo-structure-notice {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 12px;
+
+  margin: 24px 26px 0;
+
+  padding: 14px 16px;
+
+  border: 1px solid #dbeafe;
+  border-radius: 12px;
+
+  background: #f8fbff;
+
+  color: var(--macevo-blue);
+}
+
+.macevo-structure-notice svg {
+  flex: 0 0 auto;
+
+  margin-top: 1px;
+}
+
+.macevo-structure-notice strong {
+  display: block;
+
+  color: #1e40af;
+
+  font-size: 12px;
+}
+
+.macevo-structure-notice p {
+  margin: 4px 0 0;
+
+  color: #64748b;
+
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.macevo-structure-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+
+  padding: 22px 26px;
+}
+
+.macevo-structure-item {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 13px 14px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.macevo-structure-item:hover {
+  border-color: #bfdbfe;
+
+  box-shadow:
+    0 3px 12px rgba(15, 23, 42, 0.04);
+}
+
+.macevo-structure-item__number {
+  width: 30px;
+  height: 30px;
+
+  flex: 0 0 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background: #eff6ff;
+  color: var(--macevo-blue);
+
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.macevo-structure-item__main {
+  min-width: 0;
+
+  flex: 1;
+}
+
+.macevo-structure-item__title {
+  color: #1e293b;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  line-height: 1.4;
+}
+
+.macevo-structure-item__meta {
+  margin-top: 3px;
+
+  color: #94a3b8;
+
+  font-size: 10px;
+}
+
+.macevo-structure-item__actions {
+  display: flex;
+  align-items: center;
+
+  gap: 4px;
+
+  flex: 0 0 auto;
+}
+
+
+/* ============================================================
+   20. SOUS-SECTIONS DE MÉTHODOLOGIE
+============================================================ */
+
+.macevo-structure-children {
+  margin-top: 14px;
+  margin-left: 10px;
+
+  padding-left: 20px;
+
+  border-left: 1px solid #e5e7eb;
+}
+
+.macevo-structure-child {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  min-height: 34px;
+}
+
+.macevo-structure-child-marker {
+  width: 8px;
+
+  display: flex;
+  justify-content: center;
+}
+
+.macevo-structure-child-marker span {
+  width: 5px;
+  height: 5px;
+
+  border-radius: 50%;
+
+  background: #94a3b8;
+}
+
+.macevo-structure-child-title {
+  font-size: 0.9rem;
+
+  color: #64748b;
+}
+
+.macevo-structure-item-content {
+  flex: 1;
+
+  min-width: 0;
+}
+
+
+/* ============================================================
+   21. BOUTONS ICÔNES
+============================================================ */
+
+.macevo-icon-button {
+  width: 32px;
+  height: 32px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: #64748b;
+
+  cursor: pointer;
+
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.macevo-icon-button:hover:not(:disabled) {
+  border-color: #bfdbfe;
+
+  background: #eff6ff;
+
+  color: var(--macevo-blue);
+}
+
+.macevo-icon-button:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.35;
+}
+
+.macevo-icon-button--danger:hover:not(:disabled) {
+  border-color: #fecaca;
+
+  background: #fef2f2;
+
+  color: var(--macevo-danger);
+}
+
+
+/* ============================================================
+   22. AJOUT MODULE
+============================================================ */
+
+.macevo-add-module {
+  position: relative;
+
+  padding: 0 26px 26px;
+}
+
+.macevo-module-picker {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 8px;
+
+  margin-top: 10px;
+
+  padding: 12px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+
+  background: #f8fafc;
+}
+
+.macevo-module-option {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  padding: 10px 12px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+
+  background: #ffffff;
+  color: #475569;
+
+  font-family: inherit;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease,
+    color 0.18s ease;
+}
+
+.macevo-module-option:hover {
+  border-color: #bfdbfe;
+
+  background: #eff6ff;
+
+  color: var(--macevo-blue);
+}
+
+
+/* ============================================================
+   23. NAVIGATION
+============================================================ */
+
+.macevo-navigation {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  padding-top: 2px;
+}
+
+.macevo-primary-button,
+.macevo-secondary-button {
+  min-height: 42px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 0 17px;
+
+  border-radius: 11px;
+
+  font-family: inherit;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+}
+
+.macevo-primary-button {
+  border: 1px solid var(--macevo-blue);
+
+  background: var(--macevo-blue);
+  color: #ffffff;
+
+  box-shadow:
+    0 3px 8px rgba(37, 99, 235, 0.16);
+}
+
+.macevo-primary-button:hover:not(:disabled) {
+  border-color: var(--macevo-blue-dark);
+
+  background: var(--macevo-blue-dark);
+
+  box-shadow:
+    0 5px 12px rgba(37, 99, 235, 0.2);
+}
+
+.macevo-primary-button--create {
+  padding-left: 19px;
+  padding-right: 19px;
+}
+
+.macevo-secondary-button {
+  border: 1px solid #dbe2ea;
+
+  background: #ffffff;
+  color: #475569;
+}
+
+.macevo-secondary-button:hover:not(:disabled) {
+  border-color: #cbd5e1;
+
+  background: #f8fafc;
+
+  color: #1e293b;
+}
+
+.macevo-primary-button:disabled,
+.macevo-secondary-button:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.5;
+}
+
+
+/* ============================================================
+   24. REVIEW
+============================================================ */
+
+.macevo-review-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 12px;
+
+  padding: 26px;
+}
+
+.macevo-review-card {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  min-width: 0;
+
+  padding: 14px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+
+  background: #ffffff;
+}
+
+.macevo-review-card__icon {
+  width: 34px;
+  height: 34px;
+
+  flex: 0 0 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background: #eff6ff;
+  color: var(--macevo-blue);
+}
+
+.macevo-review-card > div:last-child {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.macevo-review-card span {
+  color: #94a3b8;
+
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.macevo-review-card strong {
+  color: #1e293b;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  overflow-wrap: anywhere;
+}
+
+.macevo-review-section {
+  margin: 0 26px 22px;
+
+  padding: 18px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 13px;
+
+  background: #ffffff;
+}
+
+.macevo-review-section__header {
+  margin-bottom: 14px;
+}
+
+.macevo-review-section__header h2 {
+  margin: 0;
+
+  color: #1e293b;
+
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.macevo-review-section__header p {
+  margin: 4px 0 0;
+
+  color: #94a3b8;
+
+  font-size: 10px;
+}
+
+.macevo-review-details {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 0 20px;
+}
+
+.macevo-review-structure {
+  margin: 0;
+
+  padding-left: 22px;
+}
+
+.macevo-review-structure li {
+  margin-bottom: 7px;
+
+  color: #475569;
+
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.macevo-review-structure li:last-child {
+  margin-bottom: 0;
+}
+
+.macevo-final-notice {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 12px;
+
+  margin: 0 26px 26px;
+
+  padding: 15px 16px;
+
+  border: 1px solid #bbf7d0;
+  border-radius: 12px;
+
+  background: #f0fdf4;
+
+  color: #15803d;
+}
+
+.macevo-final-notice svg {
+  flex: 0 0 auto;
+
+  margin-top: 1px;
+}
+
+.macevo-final-notice strong {
+  display: block;
+
+  color: #166534;
+
+  font-size: 12px;
+}
+
+.macevo-final-notice p {
+  margin: 4px 0 0;
+
+  color: #64748b;
+
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+
+/* ============================================================
+   25. LOADING
+============================================================ */
+
+.macevo-spin {
+  animation: macevo-spin 0.9s linear infinite;
+}
+
+@keyframes macevo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* ============================================================
+   26. RESPONSIVE — GRAND ÉCRAN
+============================================================ */
+
+@media (min-width: 1440px) {
+  .macevo-new-report {
+    padding-left: 42px;
+    padding-right: 42px;
+  }
+
+  .macevo-new-report__layout {
+    grid-template-columns:
+      minmax(0, 1fr)
+      360px;
+
+    gap: 26px;
+  }
+}
+
+
+/* ============================================================
+   27. RESPONSIVE — PETIT DESKTOP
+============================================================ */
+
+@media (max-width: 1180px) {
+  .macevo-new-report {
+    padding: 28px 26px 42px;
+  }
+
+  .macevo-new-report__layout {
+    grid-template-columns:
+      minmax(0, 1fr)
+      300px;
+
+    gap: 20px;
+  }
+
+  .macevo-step__description {
+    display: none;
+  }
+
+  .macevo-stepper__line {
+    margin-left: 8px;
+    margin-right: 8px;
+  }
+}
+
+
+/* ============================================================
+   28. TABLETTE
+============================================================ */
+
+@media (max-width: 960px) {
+  .macevo-new-report__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .macevo-summary {
+    position: relative;
+
+    top: auto;
+
+    width: 100%;
+  }
+
+  .macevo-stepper {
+    overflow-x: auto;
+
+    scrollbar-width: thin;
+  }
+
+  .macevo-step {
+    flex: 0 0 auto;
+  }
+}
+
+
+/* ============================================================
+   29. MOBILE
+============================================================ */
+
+@media (max-width: 680px) {
+  .macevo-new-report {
+    padding: 22px 16px 36px;
+  }
+
+  .macevo-new-report__header {
+    flex-direction: column;
+
+    gap: 14px;
+
+    margin-bottom: 20px;
+  }
+
+  .macevo-new-report__header h1 {
+    font-size: 23px;
+  }
+
+  .macevo-header-badge {
+    align-self: flex-start;
+  }
+
+  .macevo-stepper {
+    padding: 14px;
+
+    gap: 0;
+  }
+
+  .macevo-stepper__line {
+    min-width: 14px;
+
+    margin-left: 6px;
+    margin-right: 6px;
+  }
+
+  .macevo-step__content {
+    display: none;
+  }
+
+  .macevo-form-grid {
+    grid-template-columns: 1fr;
+
+    padding: 20px;
+  }
+
+  .macevo-form-grid__full {
+    grid-column: auto;
+  }
+
+  .macevo-panel__intro {
+    padding: 20px;
+  }
+
+  .macevo-section-heading {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .macevo-info-box {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  .macevo-structure-notice {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  .macevo-structure-list {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .macevo-add-module {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .macevo-module-picker {
+    grid-template-columns: 1fr;
+  }
+
+  .macevo-review-grid {
+    grid-template-columns: 1fr;
+
+    padding: 20px;
+  }
+
+  .macevo-review-section {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  .macevo-final-notice {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  .macevo-review-details {
+    grid-template-columns: 1fr;
+  }
+
+  /* Logo sur mobile */
+
+  .macevo-logo-upload {
+    min-height: 155px;
+  }
+
+  .macevo-logo-upload__preview {
+    min-height: 155px;
+
+    padding: 20px;
+  }
+
+  .macevo-logo-upload__preview img {
+    max-width: 220px;
+    max-height: 95px;
+  }
+}
+
+
+/* ============================================================
+   30. TRÈS PETITS ÉCRANS
+============================================================ */
+
+@media (max-width: 420px) {
+  .macevo-new-report {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .macevo-new-report__header h1 {
+    font-size: 21px;
+  }
+
+  .macevo-navigation {
+    flex-direction: column-reverse;
+
+    align-items: stretch;
+  }
+
+  .macevo-primary-button,
+  .macevo-secondary-button {
+    width: 100%;
+  }
+
+  .macevo-structure-item {
+    align-items: flex-start;
+  }
+
+  .macevo-structure-item__actions {
+    flex-direction: column;
+  }
+
+  .macevo-logo-upload__empty {
+    padding: 20px 14px;
+  }
+
+  .macevo-logo-upload__icon {
+    width: 46px;
+    height: 46px;
+  }
+
+  .macevo-logo-upload__title {
+    font-size: 11px;
+  }
+
+  .macevo-logo-upload__description {
+    font-size: 9px;
+  }
+}
+
+
+/* ============================================================
+   31. ACCESSIBILITÉ
+============================================================ */
+
+.macevo-page button:focus-visible,
+.macevo-page input:focus-visible,
+.macevo-page select:focus-visible,
+.macevo-page textarea:focus-visible {
+  outline: 2px solid rgba(37, 99, 235, 0.35);
+
+  outline-offset: 2px;
+}
+
+
+/* ============================================================
+   32. DARK MODE
+============================================================ */
+
+.dark .macevo-page {
+  --macevo-text: #f8fafc;
+  --macevo-text-soft: #cbd5e1;
+  --macevo-text-muted: #94a3b8;
+
+  --macevo-border: #1e293b;
+  --macevo-border-light: #1e293b;
+
+  --macevo-bg: #0f1722;
+  --macevo-white: #161b22;
+}
+
+.dark .macevo-new-report {
+  background: #0f1722;
+}
+
+.dark .macevo-new-report__header h1,
+.dark .macevo-panel__intro h1,
+.dark .macevo-section-heading h2,
+.dark .macevo-summary__header h3,
+.dark .macevo-review-section__header h2 {
+  color: #f8fafc;
+}
+
+.dark .macevo-new-report__header p,
+.dark .macevo-panel__intro p,
+.dark .macevo-section-heading p {
+  color: #94a3b8;
+}
+
+.dark .macevo-stepper,
+.dark .macevo-panel,
+.dark .macevo-summary,
+.dark .macevo-structure-item,
+.dark .macevo-review-card,
+.dark .macevo-review-section {
+  border-color: #1e293b;
+
+  background: #161b22;
+}
+
+.dark .macevo-input,
+.dark .macevo-icon-button,
+.dark .macevo-secondary-button,
+.dark .macevo-module-option {
+  border-color: #334155;
+
+  background: #0d1117;
+
+  color: #e2e8f0;
+}
+
+.dark .macevo-input::placeholder {
+  color: #64748b;
+}
+
+.dark .macevo-summary__footer {
+  border-color: #1e293b;
+
+  background: #11161d;
+}
+
+.dark .macevo-summary-item {
+  border-color: #1e293b;
+}
+
+.dark .macevo-summary-item strong,
+.dark .macevo-structure-item__title,
+.dark .macevo-review-card strong {
+  color: #e2e8f0;
+}
+
+.dark .macevo-structure-item__meta,
+.dark .macevo-summary-item span,
+.dark .macevo-review-card span {
+  color: #64748b;
+}
+
+.dark .macevo-module-picker {
+  border-color: #1e293b;
+
+  background: #11161d;
+}
+
+.dark .macevo-info-box,
+.dark .macevo-structure-notice {
+  background: rgba(30, 64, 175, 0.12);
+
+  border-color: rgba(59, 130, 246, 0.25);
+}
+
+.dark .macevo-info-box p,
+.dark .macevo-structure-notice p {
+  color: #94a3b8;
+}
+
+
+/* ============================================================
+   33. DARK MODE — LOGO
+============================================================ */
+
+.dark .macevo-logo-upload {
+  border-color: #334155;
+
+  background:
+    linear-gradient(
+      180deg,
+      #161b22 0%,
+      #11161d 100%
+    );
+}
+
+.dark .macevo-logo-upload:hover {
+  border-color: #3b82f6;
+
+  background:
+    linear-gradient(
+      180deg,
+      #161b22 0%,
+      #111827 100%
+    );
+}
+
+.dark .macevo-logo-upload.is-dragging {
+  border-color: #60a5fa;
+
+  background: rgba(37, 99, 235, 0.12);
+}
+
+.dark .macevo-logo-upload__icon {
+  border-color: rgba(59, 130, 246, 0.25);
+
+  background: rgba(37, 99, 235, 0.12);
+}
+
+.dark .macevo-logo-upload__title {
+  color: #e2e8f0;
+}
+
+.dark .macevo-logo-upload__description,
+.dark .macevo-logo-upload__formats,
+.dark .macevo-logo-upload__hint,
+.dark .macevo-logo-upload__filename {
+  color: #64748b;
+}
+
+.dark .macevo-logo-upload__action {
+  border-color: #334155;
+
+  background: rgba(15, 23, 42, 0.92);
+
+  color: #94a3b8;
+}
+
+.dark .macevo-logo-upload__action:hover {
+  border-color: #3b82f6;
+
+  background: rgba(37, 99, 235, 0.15);
+
+  color: #60a5fa;
+}
+
+.dark .macevo-logo-upload__action--danger:hover {
+  border-color: #7f1d1d;
+
+  background: rgba(127, 29, 29, 0.18);
+
+  color: #f87171;
+}
+
+
+/* ============================================================
+   34. RÉDUCTION DES ANIMATIONS
+============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .macevo-page *,
+  .macevo-page *::before,
+  .macevo-page *::after {
+    scroll-behavior: auto !important;
+
+    transition-duration: 0.01ms !important;
+
+    animation-duration: 0.01ms !important;
+
+    animation-iteration-count: 1 !important;
+  }
+}

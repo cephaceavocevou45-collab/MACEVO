@@ -1,0 +1,17 @@
+{
+  "settings": {
+    "title": "الإعدادات",
+    "language": "لغة التطبيق",
+    "language_subtitle": "اختر اللغة المستخدمة في تطبيق MACEVO بالكامل."
+  },
+  "menu": {
+    "dashboard": "لوحة التحكم",
+    "reports": "التقارير",
+    "stats": "الإحصائيات",
+    "ai_assistant": "مساعد الذكاء الاصطناعي",
+    "editor": "المحرر",
+    "profile": "الملف الشخصي",
+    "settings": "الإعدادات",
+    "logout": "تسجيل الخروج"
+  }
+}

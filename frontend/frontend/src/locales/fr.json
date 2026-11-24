@@ -1,0 +1,17 @@
+{
+  "settings": {
+    "title": "Paramètres",
+    "language": "Langue de l'application",
+    "language_subtitle": "Choisissez la langue utilisée dans toute l'application MACEVO."
+  },
+  "menu": {
+    "dashboard": "Tableau de bord",
+    "reports": "Rapports",
+    "stats": "Statistiques",
+    "ai_assistant": "Assistant IA",
+    "editor": "Éditeur",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "logout": "Déconnexion"
+  }
+}

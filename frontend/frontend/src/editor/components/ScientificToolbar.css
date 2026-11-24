@@ -1,0 +1,81 @@
+.macevo-scientific-toolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 8px 12px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #ffffff;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.scientific-toolbar-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.macevo-scientific-toolbar button {
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    color: #374151;
+    border-radius: 7px;
+    padding: 7px 10px;
+    font-size: 13px;
+    cursor: pointer;
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.15s ease;
+}
+
+.macevo-scientific-toolbar button:hover {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+.macevo-scientific-toolbar button:active {
+    transform: scale(0.98);
+}
+
+.scientific-toolbar-dropdown {
+    position: relative;
+}
+
+.scientific-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+
+    min-width: 220px;
+
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+
+    box-shadow:
+        0 10px 25px rgba(0, 0, 0, 0.08),
+        0 4px 8px rgba(0, 0, 0, 0.04);
+
+    padding: 6px;
+
+    display: flex;
+    flex-direction: column;
+
+    z-index: 100;
+}
+
+.scientific-dropdown-menu button {
+    width: 100%;
+    text-align: left;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    padding: 9px 10px;
+}
+
+.scientific-dropdown-menu button:hover {
+    background: #f3f4f6;
+}

@@ -1,0 +1,17 @@
+{
+  "settings": {
+    "title": "设置",
+    "language": "应用语言",
+    "language_subtitle": "选择在整个 MACEVO 应用程序中使用的语言。"
+  },
+  "menu": {
+    "dashboard": "仪表板",
+    "reports": "报告",
+    "stats": "统计",
+    "ai_assistant": "AI 助手",
+    "editor": "编辑器",
+    "profile": "个人资料",
+    "settings": "设置",
+    "logout": "退出登录"
+  }
+}

@@ -1,0 +1,1387 @@
+/*
+============================================================
+MACEVO — ÉDITEUR A4 / CANVAS WORD-LIKE
+============================================================
+
+Objectif :
+- feuille A4 réellement centrée dans le workspace
+- rendu proche d'un traitement de texte professionnel
+- une seule feuille physique fournie par PaginationPlus
+- aucun second A4 artificiel autour de ProseMirror
+- espace de travail gris
+- papier blanc avec ombre
+- largeur A4 : 794 CSS px
+- hauteur A4 : 1123 CSS px
+============================================================
+*/
+
+:root {
+  --macevo-a4-width: 794px;
+  --macevo-a4-height: 1123px;
+
+  --macevo-workspace: #e7e9ed;
+  --macevo-paper: #ffffff;
+  --macevo-paper-border: #d7dbe2;
+
+  --macevo-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.08),
+    0 4px 10px rgba(15, 23, 42, 0.08),
+    0 14px 36px rgba(15, 23, 42, 0.12);
+
+  --macevo-page-gap: 28px;
+
+  --macevo-text: #202124;
+  --macevo-muted: #64748b;
+  --macevo-border: #d1d5db;
+  --macevo-primary: #1d4ed8;
+  --macevo-primary-dark: #1e3a8a;
+
+  --macevo-body-font:
+    "Aptos",
+    "Calibri",
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
+  --macevo-heading-font:
+    "Aptos Display",
+    "Aptos",
+    "Calibri",
+    "Segoe UI",
+    Arial,
+    sans-serif;
+}
+
+/* ============================================================
+   WORKSPACE — zone grise comme Word
+============================================================ */
+
+#macevo-editor-workspace.macevo-editor-workspace,
+.macevo-editor-workspace {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  background: var(--macevo-workspace);
+}
+
+/* ============================================================
+   SCROLL — le canvas prend toute la largeur disponible
+============================================================ */
+
+#macevo-editor-scroll.macevo-editor-scroll,
+.macevo-editor-scroll {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: var(--macevo-workspace);
+  scrollbar-gutter: stable;
+}
+
+/* ============================================================
+   CANVAS — CENTRAGE RÉEL DE LA FEUILLE
+============================================================ */
+
+.macevo-editor-canvas {
+  box-sizing: border-box;
+
+  width: 100%;
+  min-width: 100%;
+  min-height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding:
+    36px
+    36px
+    80px;
+
+  /* Très important : aucun justify-content:flex-start
+     qui ferait dépendre le centrage de la largeur du contenu. */
+}
+
+/* ============================================================
+   CONTENEUR PAGINATIONPLUS
+============================================================ */
+
+.macevo-pagination-editor {
+  box-sizing: border-box;
+  width: var(--macevo-page-width, var(--macevo-a4-width));
+  min-width: var(--macevo-page-width, var(--macevo-a4-width));
+  max-width: var(--macevo-page-width, var(--macevo-a4-width));
+  margin: 0 auto;
+  outline: none;
+}
+
+/*
+ * PaginationPlus ajoute .tiptap-with-pagination directement
+ * sur le ProseMirror. Ce n'est donc PAS un conteneur autour
+ * du ProseMirror : il constitue la feuille éditable.
+ */
+.macevo-pagination-editor .tiptap-with-pagination,
+.macevo-pagination-editor .ProseMirror.tiptap-with-pagination,
+.macevo-pagination-editor .tiptap.tiptap-with-pagination {
+  box-sizing: border-box;
+  width: var(--macevo-page-width, var(--macevo-a4-width)) !important;
+  min-width: var(--macevo-page-width, var(--macevo-a4-width)) !important;
+  max-width: var(--macevo-page-width, var(--macevo-a4-width)) !important;
+  min-height: var(--macevo-page-height, var(--macevo-a4-height));
+  margin: 0 auto !important;
+  outline: none;
+
+  /* Le SVG répété dessine chaque feuille, son fond, sa bordure et le filigrane. */
+  background-color: transparent !important;
+  background-image: var(--macevo-page-artwork, none) !important;
+  background-size: var(--macevo-page-width, 794px) var(--macevo-page-step, 1151px) !important;
+  background-repeat: repeat-y !important;
+  background-position: top left !important;
+  color: var(--macevo-text);
+  border: 0 !important;
+  box-shadow: var(--macevo-shadow);
+}
+
+/* PaginationPlus crée le séparateur gris entre les pages. */
+.macevo-pagination-editor .tiptap-pagination-gap {
+  box-sizing: border-box;
+  width: 100% !important;
+  background: var(--macevo-workspace) !important;
+  border: 0 !important;
+}
+
+/* Les blocs techniques de pagination ne doivent pas peindre
+ * une seconde feuille par-dessus la vraie surface Tiptap. */
+.macevo-pagination-editor .tiptap-page-break,
+.macevo-pagination-editor .tiptap-page-break .page,
+.macevo-pagination-editor .tiptap-page-break .breaker {
+  background: transparent !important;
+}
+
+/* Header/footer générés par PaginationPlus. */
+.macevo-pagination-editor .tiptap-page-header,
+.macevo-pagination-editor .tiptap-page-footer {
+  box-sizing: border-box;
+  background: transparent !important;
+  color: var(--macevo-muted);
+}
+
+/* ============================================================
+   PROSEMIRROR / TIPTAP
+============================================================ */
+
+.macevo-pagination-editor .ProseMirror,
+.macevo-pagination-editor .tiptap {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  min-height: inherit;
+  margin: 0;
+  outline: none;
+
+  /* IMPORTANT : ne jamais rendre la feuille transparente. */
+  background-color: transparent !important;
+
+  overflow: visible !important;
+}
+
+/* ============================================================
+   TYPOGRAPHIE DU DOCUMENT
+============================================================ */
+
+.macevo-pagination-editor .tiptap-with-pagination {
+  box-sizing: border-box;
+
+  width: 100%;
+  max-width: none;
+  min-height: 0;
+
+  margin: 0;
+
+  outline: none;
+
+  background-color: transparent !important;
+
+  color: var(--macevo-text);
+
+  font-family: var(--macevo-body-font);
+  font-size: var(--macevo-body-size, 11pt);
+  line-height: var(--macevo-body-line-height, 1.6);
+
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+
+  caret-color: currentColor;
+  column-count: var(--macevo-columns, 1);
+  column-gap: 1.2em;
+  column-fill: auto;
+}
+
+/* Sauts réellement enregistrés dans le document et repris à l'impression. */
+.macevo-pagination-editor [data-macevo-break="page"] {
+  display: block;
+  height: 0;
+  break-before: page;
+  page-break-before: always;
+  column-span: all;
+}
+.macevo-pagination-editor [data-macevo-break="section"] {
+  display: block;
+  height: 1px;
+  margin: 1.5em 0;
+  border-top: 1px solid #cbd5e1;
+  break-before: page;
+  page-break-before: always;
+  column-span: all;
+}
+.macevo-pagination-editor [data-macevo-break="column"] {
+  display: block;
+  height: 0;
+  break-before: column;
+  -webkit-column-break-before: always;
+}
+
+/* Paragraphes */
+
+.macevo-pagination-editor .ProseMirror p {
+  margin: 0 0 9pt;
+  min-height: 0;
+
+  text-align: justify;
+  text-justify: inter-word;
+
+  hyphens: auto;
+}
+
+/* Titres */
+
+.macevo-pagination-editor .ProseMirror h1 {
+  margin: 24pt 0 14pt;
+
+  font-family: var(--macevo-heading-font);
+
+  font-size: 24pt;
+  line-height: 1.15;
+  font-weight: 700;
+
+  color: var(--macevo-primary);
+
+  letter-spacing: -0.015em;
+
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+.macevo-pagination-editor .ProseMirror h2 {
+  margin: 22pt 0 10pt;
+  padding-bottom: 5pt;
+
+  font-family: var(--macevo-heading-font);
+
+  font-size: 17pt;
+  line-height: 1.25;
+  font-weight: 700;
+
+  color: var(--macevo-primary);
+
+  border-bottom: 1px solid var(--macevo-border);
+
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+.macevo-pagination-editor .ProseMirror h3 {
+  margin: 17pt 0 8pt;
+
+  font-family: var(--macevo-heading-font);
+
+  font-size: 14pt;
+  line-height: 1.3;
+  font-weight: 700;
+
+  color: var(--macevo-primary-dark);
+
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+.macevo-pagination-editor .ProseMirror h4 {
+  margin: 13pt 0 6pt;
+
+  font-size: 12pt;
+  line-height: 1.3;
+  font-weight: 700;
+
+  color: var(--macevo-text);
+
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+/* ============================================================
+   LISTES
+============================================================ */
+
+.macevo-pagination-editor .ProseMirror ul {
+  margin: 5pt 0 10pt;
+  padding-left: 27px;
+  list-style-type: disc;
+}
+
+.macevo-pagination-editor .ProseMirror ol {
+  margin: 5pt 0 10pt;
+  padding-left: 29px;
+  list-style-type: decimal;
+}
+
+.macevo-pagination-editor .ProseMirror li {
+  margin-bottom: 4pt;
+  padding-left: 2px;
+}
+
+/* ============================================================
+   TABLEAUX
+============================================================ */
+
+.macevo-pagination-editor .ProseMirror table {
+  width: 100%;
+
+  margin: 15pt 0;
+
+  border-collapse: collapse;
+  table-layout: fixed;
+
+  font-size: 10.5pt;
+}
+
+.macevo-pagination-editor .ProseMirror th,
+.macevo-pagination-editor .ProseMirror td {
+  padding: 8px 9px;
+
+  border: 1px solid var(--macevo-border);
+
+  vertical-align: top;
+  text-align: left;
+
+  overflow-wrap: break-word;
+}
+
+.macevo-pagination-editor .ProseMirror th {
+  background: var(--macevo-primary);
+  color: #fff;
+
+  font-weight: 700;
+}
+
+/* ============================================================
+   IMAGES / FIGURES
+============================================================ */
+
+.macevo-pagination-editor .ProseMirror img {
+  display: block;
+
+  max-width: 100%;
+  height: auto;
+
+  margin: 16pt auto;
+
+  border-radius: 2px;
+}
+
+.macevo-pagination-editor .ProseMirror figure {
+  display: block;
+
+  width: 100%;
+
+  margin: 18pt 0;
+
+  text-align: center;
+
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.macevo-pagination-editor .ProseMirror figcaption {
+  margin-top: 7pt;
+
+  font-size: 9.5pt;
+  line-height: 1.4;
+
+  color: var(--macevo-muted);
+
+  text-align: center;
+}
+
+/* ============================================================
+   BLOCS DE CITATION
+============================================================ */
+
+.macevo-pagination-editor .ProseMirror blockquote {
+  margin: 16pt 0;
+  padding: 11pt 16pt;
+
+  border-left: 4px solid var(--macevo-primary);
+
+  background: color-mix(
+    in srgb,
+    var(--macevo-primary) 7%,
+    transparent
+  );
+
+  color: var(--macevo-muted);
+
+  font-style: italic;
+
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+/* ============================================================
+   ÉQUATIONS / CODE
+============================================================ */
+
+.macevo-pagination-editor .ProseMirror code {
+  padding: 3px 5px;
+
+  border-radius: 4px;
+
+  background: #f1f5f9;
+
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.9em;
+}
+
+/* ============================================================
+   LIENS
+============================================================ */
+
+.macevo-pagination-editor .ProseMirror a {
+  color: var(--macevo-primary);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* ============================================================
+   SÉLECTION / FOCUS
+============================================================ */
+
+.macevo-pagination-editor .ProseMirror::selection {
+  background: rgba(59, 130, 246, 0.22);
+  color: inherit;
+}
+
+.macevo-pagination-editor .ProseMirror-focused,
+.macevo-pagination-editor .ProseMirror:focus {
+  outline: none;
+}
+
+/* ============================================================
+   PAGES MACEVO INTERNES
+============================================================ */
+
+/*
+ * Le documentModel peut utiliser data-macevo-page.
+ * On ne lui impose PAS une nouvelle largeur A4 :
+ * PaginationPlus reste propriétaire de la géométrie.
+ */
+
+.macevo-pagination-editor [data-macevo-page] {
+  box-sizing: border-box;
+  background: transparent;
+}
+
+/* ============================================================
+   ANCIEN CONTENEUR
+============================================================ */
+
+#macevo-page {
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+
+  height: auto !important;
+  min-height: 0 !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  overflow: visible !important;
+
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* ============================================================
+   ÉCRAN ÉTROIT
+============================================================ */
+
+@media (max-width: 900px) {
+  .macevo-editor-canvas {
+    align-items: flex-start;
+
+    padding:
+      24px
+      20px
+      64px;
+  }
+
+  .macevo-pagination-editor {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* ============================================================
+   DARK MODE / SEPIA
+============================================================ */
+
+html.dark .macevo-editor-workspace,
+html.dark .macevo-editor-scroll {
+  background: #030712;
+}
+
+html.dark .macevo-pagination-editor .tiptap-with-pagination,
+html.dark .macevo-pagination-editor .ProseMirror {
+  background: #111827 !important;
+  color: #f9fafb;
+  border-color: #374151;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.25),
+    0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+html.sepia .macevo-editor-workspace,
+html.sepia .macevo-editor-scroll {
+  background: #f5eedc !important;
+}
+
+html.sepia .macevo-pagination-editor .tiptap-with-pagination,
+html.sepia .macevo-pagination-editor .ProseMirror {
+  background: #fdf6e2 !important;
+  color: #451a03;
+}
+
+/* ============================================================
+   IMPRESSION
+============================================================ */
+
+@media print {
+  html,
+  body,
+  #root {
+    width: 100%;
+    height: auto;
+  }
+
+  body {
+    background: #fff !important;
+  }
+
+  .macevo-editor-workspace,
+  .macevo-editor-scroll,
+  .macevo-editor-canvas {
+    width: auto !important;
+    min-width: 0 !important;
+
+    background: #fff !important;
+
+    overflow: visible !important;
+
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .macevo-pagination-editor {
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+
+    margin: 0 !important;
+  }
+
+  .macevo-pagination-editor .tiptap-pagination-gap {
+    background: #fff !important;
+    border: 0 !important;
+  }
+
+  .macevo-pagination-editor .tiptap-with-pagination {
+    box-shadow: none !important;
+    background-color: transparent !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
+
+/* ============================================================
+   MACEVO — SURFACE WORD / RAIL DES PAGES
+============================================================ */
+
+.macevo-editor-shell {
+  min-width: 0;
+  height: 100vh;
+  height: 100dvh;
+}
+
+.macevo-editor-main {
+  min-width: 0;
+  min-height: 0;
+}
+
+.macevo-editor-document-row {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Ruban scientifique : navigation accessible, outils contenus dans leur
+   propre zone de défilement et aucun débordement horizontal de la page. */
+.macevo-ribbon-tabs {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.macevo-ribbon-panel:not(.is-workspace) {
+  height: 112px;
+  min-height: 112px;
+  overflow: hidden;
+}
+
+.macevo-ribbon-panel.is-workspace {
+  height: 54px;
+  min-height: 54px;
+  overflow: hidden;
+}
+
+.macevo-ribbon-panel.is-workspace .macevo-ribbon-content {
+  height: 54px;
+  min-height: 54px;
+}
+
+.macevo-ribbon-content {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.macevo-ribbon-content > div {
+  min-height: 100%;
+  width: max-content;
+  min-width: 100%;
+  align-items: stretch;
+}
+
+.macevo-latex-workspace,
+.macevo-latex-workspace-inner,
+.macevo-latex-workspace-inner > main,
+.macevo-latex-panel-group {
+  height: 100%;
+}
+
+.macevo-latex-workspace,
+.macevo-latex-workspace-inner,
+.macevo-latex-desktop,
+.macevo-latex-compact {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.macevo-latex-panel-group,
+.macevo-latex-columns {
+  min-width: 0;
+  min-height: 0;
+}
+
+.macevo-latex-pane {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.macevo-latex-code {
+  background: #111827 !important;
+  color: #e2e8f0 !important;
+  caret-color: #93c5fd;
+  font-size: 13px;
+  line-height: 1.75;
+  tab-size: 2;
+}
+
+.macevo-latex-code::selection {
+  background: #334155;
+}
+
+.macevo-latex-separator {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 auto;
+  background: #e2e8f0;
+  transition: background-color .15s ease;
+}
+
+.macevo-latex-separator:hover,
+.macevo-latex-separator:focus-visible {
+  background: #6366f1;
+  outline: none;
+}
+
+.macevo-latex-separator-x {
+  width: 6px;
+  cursor: col-resize;
+}
+
+.macevo-latex-separator-y {
+  height: 6px;
+  cursor: row-resize;
+}
+
+.macevo-latex-pane-tabs {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 6px;
+  overflow-x: auto;
+  border-bottom: 1px solid #dbe2ea;
+  background: #fff;
+  padding: 6px 10px;
+  scrollbar-width: thin;
+}
+
+.macevo-latex-pane-tabs button {
+  display: inline-flex;
+  min-height: 40px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 0 13px;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.macevo-latex-pane-tabs button:hover {
+  background: #f1f5f9;
+}
+
+.macevo-latex-pane-tabs button.is-active {
+  border-color: #c7d2fe;
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.macevo-latex-compact-pane {
+  overflow: hidden;
+}
+
+.macevo-latex-compact-pane > div,
+.macevo-latex-compact-pane > section,
+.macevo-latex-compact-pane > aside {
+  height: 100%;
+  min-height: 0;
+}
+
+.macevo-latex-status {
+  min-width: 0;
+}
+
+.macevo-latex-toolbar > button {
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .macevo-latex-toolbar {
+    height: 52px;
+    gap: 4px;
+    padding-inline: 8px;
+  }
+
+  .macevo-latex-toolbar > button {
+    min-height: 38px;
+    padding-inline: 10px;
+    font-size: 12px;
+  }
+
+  .macevo-latex-status {
+    padding-inline: 8px;
+    font-size: 10px;
+  }
+}
+
+.macevo-ribbon-content [role="group"] {
+  flex-shrink: 0;
+}
+
+.macevo-ribbon-tabs [role="tab"]:focus-visible {
+  z-index: 1;
+  outline: 2px solid #2563eb;
+  outline-offset: -3px;
+}
+
+/* Le canvas est toujours centré dans toute la largeur disponible. */
+.macevo-editor-document-row .macevo-editor-workspace {
+  min-width: 0;
+  min-height: 0;
+}
+
+.macevo-editor-document-row .macevo-editor-scroll {
+  display: block;
+}
+
+.macevo-editor-document-row .macevo-editor-canvas {
+  width: 100% !important;
+  min-width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  box-sizing: border-box;
+  padding: 36px 48px 80px !important;
+}
+
+.macevo-editor-document-row .macevo-pagination-editor {
+  flex: 0 0 auto;
+  width: var(--macevo-page-width, var(--macevo-a4-width)) !important;
+  min-width: var(--macevo-page-width, var(--macevo-a4-width)) !important;
+  max-width: var(--macevo-page-width, var(--macevo-a4-width)) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* PaginationPlus applique .tiptap-with-pagination directement
+ * sur ProseMirror : le SVG dessine le blanc (ou le fond choisi),
+ * les séparateurs et le filigrane sur chaque feuille. */
+.macevo-editor-document-row .macevo-pagination-editor .tiptap-with-pagination {
+  width: var(--macevo-page-width, var(--macevo-a4-width)) !important;
+  min-width: var(--macevo-page-width, var(--macevo-a4-width)) !important;
+  max-width: var(--macevo-page-width, var(--macevo-a4-width)) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  background-color: transparent !important;
+  background-image: var(--macevo-page-artwork, none) !important;
+  background-size: var(--macevo-page-width, 794px) var(--macevo-page-step, 1151px) !important;
+  background-repeat: repeat-y !important;
+  background-position: top left !important;
+}
+
+/* Les pages produites par PaginationPlus sont les seules feuilles. */
+/* Les séparateurs de PaginationPlus prennent la couleur du workspace. */
+.macevo-editor-document-row .tiptap-page-break {
+  width: 100%;
+}
+
+/* Sauts logiques : couverture, sommaire et nouveaux chapitres. */
+.macevo-cover,
+.macevo-backend-cover,
+.macevo-toc,
+.macevo-preliminary-flow,
+.macevo-academic-flow {
+  box-sizing: border-box;
+}
+
+.macevo-cover,
+.macevo-backend-cover {
+  break-after: page;
+  page-break-after: always;
+}
+
+.macevo-toc,
+.macevo-preliminary-flow,
+.macevo-academic-flow {
+  break-before: page;
+  page-break-before: always;
+}
+
+/* ============================================================
+   RAIL DROIT — miniature des pages, comme Word
+============================================================ */
+
+.macevo-pages-rail {
+  position: relative;
+  z-index: 20;
+  width: 190px;
+  min-width: 190px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #f8fafc;
+  border-left: 1px solid #d8dde5;
+  overflow: hidden;
+}
+
+.macevo-pages-rail-header {
+  height: 48px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  background: #fff;
+  border-bottom: 1px solid #e1e5eb;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.macevo-pages-rail-header button {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.macevo-pages-rail-header button:hover {
+  background: #eef2f7;
+  color: #0f172a;
+}
+
+.macevo-pages-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 14px 14px 18px;
+}
+
+.macevo-page-thumbnail {
+  position: relative;
+  width: 100%;
+  display: block;
+  padding: 0;
+  margin: 0 0 16px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.macevo-page-thumbnail-number {
+  display: block;
+  margin-bottom: 5px;
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.macevo-page-thumbnail-paper {
+  display: block;
+  position: relative;
+  width: 150px;
+  height: 212px;
+  margin: 0 auto;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #d7dce4;
+  border-radius: 2px;
+  box-shadow: 0 2px 7px rgba(15, 23, 42, .10);
+  transform-origin: top left;
+}
+
+/*
+ * La miniature n'est plus un simple conteneur vide :
+ * son contenu est une copie visuelle des blocs réellement
+ * rendus sur la page correspondante.
+ */
+.macevo-page-thumbnail-content {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 150px;
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+  transform: none;
+  transform-origin: top left;
+  background: #fff;
+  color: #111827;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* La miniature doit reprendre le rendu typographique du document. */
+.macevo-page-thumbnail-content,
+.macevo-page-thumbnail-content * {
+  box-sizing: border-box;
+}
+
+/* Chaque bloc conserve sa position réelle dans la page A4 miniature. */
+.macevo-page-thumbnail-content .macevo-thumbnail-block {
+  position: absolute;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.macevo-page-thumbnail-content .macevo-thumbnail-block > * {
+  max-width: 100%;
+}
+
+.macevo-page-thumbnail-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+.macevo-page-thumbnail-content table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.macevo-page-thumbnail-content .tiptap-page-break,
+.macevo-page-thumbnail-content [data-tiptap-pagination] {
+  display: none !important;
+}
+
+.macevo-page-thumbnail-paper > * {
+  pointer-events: none;
+}
+
+.macevo-page-thumbnail-paper .ProseMirror,
+.macevo-page-thumbnail-paper .tiptap {
+  width: var(--macevo-thumbnail-page-width, 794px) !important;
+  min-width: var(--macevo-thumbnail-page-width, 794px) !important;
+  max-width: var(--macevo-thumbnail-page-width, 794px) !important;
+  min-height: var(--macevo-thumbnail-page-height, 1123px) !important;
+  transform: none !important;
+  transform-origin: top left;
+  background: #fff !important;
+  font-size: 11pt;
+  overflow: visible !important;
+}
+
+.macevo-page-thumbnail-paper img {
+  max-width: 100%;
+}
+
+.macevo-page-thumbnail-paper table {
+  max-width: 100%;
+}
+
+.macevo-page-thumbnail.is-active .macevo-page-thumbnail-number {
+  color: #2563eb;
+}
+
+.macevo-page-thumbnail.is-active .macevo-page-thumbnail-paper {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, .12), 0 2px 8px rgba(15, 23, 42, .12);
+}
+
+.macevo-page-thumbnail:hover .macevo-page-thumbnail-paper {
+  border-color: #94a3b8;
+}
+
+.macevo-pages-footer {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  border-top: 1px solid #e1e5eb;
+  background: #fff;
+  color: #64748b;
+  font-size: 11px;
+}
+
+.macevo-pages-open-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 30;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #d8dde5;
+  border-radius: 8px;
+  background: rgba(255,255,255,.95);
+  color: #475569;
+  box-shadow: 0 2px 8px rgba(15,23,42,.10);
+}
+
+.macevo-pages-open-button:hover {
+  background: #fff;
+  color: #0f172a;
+}
+
+/* ============================================================
+   BARRE D'ÉTAT WORD-LIKE
+============================================================ */
+
+.macevo-status-bar {
+  position: relative;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 36px;
+  min-height: 36px;
+  padding: 0 12px;
+  border-top: 1px solid #d9dee6;
+  background: #fff;
+  color: #64748b;
+  font-size: 11px;
+}
+
+.macevo-status-left,
+.macevo-status-zoom,
+.macevo-status-save {
+  display: flex;
+  align-items: center;
+}
+
+.macevo-status-left {
+  gap: 14px;
+}
+
+.macevo-status-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.macevo-status-divider {
+  width: 1px;
+  height: 14px;
+  background: #e2e8f0;
+}
+
+.macevo-status-save {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.macevo-save-dot {
+  width: 19px;
+  height: 19px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #94a3b8;
+}
+
+.macevo-save-dot.is-saved {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.macevo-status-zoom {
+  gap: 2px;
+}
+
+.macevo-status-zoom button {
+  width: 28px;
+  height: 25px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.macevo-status-zoom button:hover:not(:disabled) {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.macevo-status-zoom button:disabled {
+  opacity: .35;
+  cursor: not-allowed;
+}
+
+.macevo-status-zoom .macevo-zoom-value {
+  min-width: 48px;
+  font-weight: 600;
+}
+
+@media (max-width: 1100px) {
+  .macevo-pages-rail {
+    width: 164px;
+    min-width: 164px;
+  }
+
+  .macevo-page-thumbnail-paper {
+    width: 128px;
+    height: 181px;
+  }
+}
+
+@media (max-width: 850px) {
+  .macevo-editor-shell {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  .macevo-pages-rail {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 35;
+    width: min(190px, 52vw);
+    min-width: min(190px, 52vw);
+    box-shadow: -12px 0 32px rgba(15, 23, 42, .12);
+  }
+
+  .macevo-editor-document-row .macevo-editor-canvas {
+    padding: 18px 12px 48px !important;
+  }
+
+  .macevo-ribbon-panel:not(.is-workspace) {
+    height: 96px;
+    min-height: 96px;
+  }
+
+  .macevo-ribbon-content > div {
+    min-height: 96px;
+  }
+
+  .macevo-ribbon-content button,
+  .macevo-ribbon-content select {
+    min-height: 36px;
+  }
+
+  .macevo-status-bar {
+    gap: 8px;
+    padding: 0 8px;
+    font-size: 10px;
+  }
+
+  .macevo-status-save {
+    position: static;
+    transform: none;
+  }
+
+  .macevo-status-left {
+    min-width: 0;
+    gap: 8px;
+    overflow: hidden;
+  }
+
+  .macevo-status-item {
+    gap: 4px;
+  }
+}
+
+@media (max-width: 560px) {
+  .macevo-ribbon-tabs {
+    height: 42px;
+    padding-inline: 4px;
+  }
+
+  .macevo-ribbon-tabs [role="tab"] {
+    padding-inline: 12px;
+    font-size: 12px;
+  }
+
+  .macevo-status-left .macevo-status-item:nth-of-type(4),
+  .macevo-status-left .macevo-status-item:nth-of-type(6),
+  .macevo-status-left .macevo-status-divider:last-of-type {
+    display: none;
+  }
+
+  .macevo-status-save {
+    max-width: 112px;
+    overflow: hidden;
+    font-size: 9px;
+  }
+
+  .macevo-status-zoom button {
+    width: 25px;
+  }
+}
+
+/* ============================================================
+   MINIATURES — COPIE VISUELLE DE LA VRAIE FEUILLE A4
+============================================================ */
+
+.macevo-page-thumbnail-paper {
+  position: relative;
+  width: 150px;
+  height: 212px;
+  overflow: hidden;
+  background: #fff;
+}
+
+/*
+ * Une miniature contient maintenant une copie du DOM réel de Tiptap.
+ * Elle ne reconstruit plus le contenu à partir des paragraphes.
+ */
+.macevo-page-thumbnail-content {
+  position: absolute;
+  inset: 0;
+  width: 150px;
+  height: 100%;
+  overflow: hidden;
+  background: #fff;
+  pointer-events: none;
+  user-select: none;
+}
+
+.macevo-page-thumbnail-content .macevo-thumbnail-page-shell {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: var(--macevo-thumbnail-page-width, 794px) !important;
+  min-width: var(--macevo-thumbnail-page-width, 794px) !important;
+  max-width: var(--macevo-thumbnail-page-width, 794px) !important;
+  background: #fff !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
+.macevo-page-thumbnail-content .macevo-thumbnail-live-document {
+  width: var(--macevo-thumbnail-page-width, 794px) !important;
+  min-width: var(--macevo-thumbnail-page-width, 794px) !important;
+  max-width: var(--macevo-thumbnail-page-width, 794px) !important;
+  margin: 0 !important;
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
+.macevo-page-thumbnail-content .macevo-thumbnail-page-shell *,
+.macevo-page-thumbnail-content .macevo-thumbnail-live-document * {
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
+/* Les marqueurs de pagination ne doivent pas apparaître dans la copie. */
+.macevo-page-thumbnail-content .tiptap-page-break,
+.macevo-page-thumbnail-content .tiptap-pagination-gap,
+.macevo-page-thumbnail-content [data-tiptap-pagination] {
+  visibility: hidden !important;
+}
+
+/* Neutralise définitivement l'ancien système de blocs reconstruits. */
+.macevo-page-thumbnail-content .macevo-thumbnail-block {
+  position: static !important;
+  left: auto !important;
+  top: auto !important;
+  width: auto !important;
+  min-height: 0 !important;
+}

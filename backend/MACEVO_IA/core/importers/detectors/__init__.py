@@ -1,0 +1,3 @@
+"""
+MACEVO - Import Format Detectors
+"""
