@@ -12,7 +12,12 @@ class LatexApi {
 
     constructor() {
 
-        this.baseURL = "/api/latex";
+        const apiBaseURL = (
+            import.meta.env.VITE_API_BASE_URL ||
+            "/api/"
+        ).replace(/\/+$/, "");
+
+        this.baseURL = `${apiBaseURL}/latex`;
 
     }
 

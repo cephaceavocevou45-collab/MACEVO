@@ -1,7 +1,8 @@
 # Déploiement Railway de MACEVO
 
-Le dépôt contient deux applications Django distinctes. Le frontend actuel reste
-hébergé sur Vercel pendant le déploiement du backend.
+Le dépôt contient un frontend Vite/React et deux applications Django
+distinctes. Les trois applications et PostgreSQL sont hébergés dans le même
+projet Railway.
 
 ## Services
 
@@ -13,11 +14,13 @@ Django, choisir le répertoire racine `backend` et le builder Dockerfile.
 | --- | --- | --- |
 | `macevo-api` | `sh scripts/start-main.sh` | Oui |
 | `macevo-ia` | `sh scripts/start-macevo-ia.sh` | Non, accès privé uniquement |
+| `macevo-frontend` | `npm start` | Oui |
 | PostgreSQL | Modèle PostgreSQL Railway | Non |
 
-Le service PostgreSQL doit être référencé depuis `macevo-api` dans la variable
-`DATABASE_URL`. Le service principal appelle l’IA avec l’URL privée Railway,
-par exemple `http://${{macevo-ia.RAILWAY_PRIVATE_DOMAIN}}:${{macevo-ia.PORT}}`.
+Racines de service : `/backend` pour les deux services Django et
+`/frontend/frontend` pour le frontend Vite. Le service PostgreSQL doit être
+référencé depuis `macevo-api` dans la variable `DATABASE_URL`. Le frontend
+utilise `VITE_API_BASE_URL` pour joindre l’API publique Railway.
 
 ## Variables à configurer dans Railway
 
@@ -29,7 +32,7 @@ Régler ces variables depuis les paramètres Railway. Ne pas les ajouter au dép
 - `DJANGO_DEBUG=False`
 - `DJANGO_SECRET_KEY` : secret généré pour Django
 - `DJANGO_ALLOWED_HOSTS` : domaine Railway du service et domaine API personnalisé éventuel
-- `DJANGO_CORS_ALLOWED_ORIGINS` : URL(s) HTTPS exacte(s) du frontend Vercel
+- `DJANGO_CORS_ALLOWED_ORIGINS` : origine HTTPS exacte du frontend Railway
 - `DATABASE_URL` : référence Railway vers le PostgreSQL de ce projet
 - `MACEVO_IA_BASE_URL` : URL privée du service `macevo-ia`
 - `MACEVO_IA_SERVICE_TOKEN` : jeton interne partagé avec `macevo-ia`
@@ -44,6 +47,15 @@ Régler ces variables depuis les paramètres Railway. Ne pas les ajouter au dép
 - `DJANGO_ALLOWED_HOSTS` : domaine privé Railway de `macevo-ia`
 - `MACEVO_IA_SERVICE_TOKEN` : même jeton interne que celui utilisé par l’API
 - `AI_PROVIDER` et la configuration du fournisseur IA choisi
+
+### `macevo-frontend`
+
+- `VITE_API_BASE_URL` : URL publique du backend suivie de `/api/`, par exemple
+  `https://macevo-production.up.railway.app/api/`
+- `VITE_GOOGLE_CLIENT_ID` : seulement si l’authentification Google est activée
+
+Après avoir généré le domaine public du frontend, ajouter son origine HTTPS à
+`DJANGO_CORS_ALLOWED_ORIGINS` sur `macevo-api`.
 
 Les valeurs de secrets ne doivent être saisies que dans les paramètres Railway.
 Ne pas les communiquer dans le dépôt, les journaux ou une conversation.
@@ -65,5 +77,5 @@ Ne pas les communiquer dans le dépôt, les journaux ou une conversation.
 - Le Dockerfile installe TeX Live, Biber et Tesseract. Cela augmente la durée de
   build, la taille de l’image et la consommation Railway. Vérifier le plan et le
   coût estimé avant d’activer les services.
-- Garder le frontend Vercel actif jusqu’à ce que `/api/health/`, les connexions,
-  les téléversements et les exports aient été vérifiés sur l’API Railway.
+- Vérifier `/api/health/`, l’authentification, les téléversements et les exports
+  avec le domaine Railway du frontend avant de retirer l’ancien hébergement.
